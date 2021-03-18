@@ -1,8 +1,9 @@
 import styled from 'styled-components';
-import { Typography, InputLabel, Select, MenuItem, TextField } from '@material-ui/core';
+import { Typography, InputLabel, Select, MenuItem, TextField, CircularProgress } from '@material-ui/core';
 import { useState } from 'react';
 import useLatestExchangeRatesForCurrency from 'src/hooks/useLatestExchangeRatesForCurrency';
 import validations from 'src/utils/validation';
+import CurrencyRatesGraph from './CurrencyRatesGraph';
 
 interface ConvertedValues {
   source?: string | number;
@@ -74,17 +75,17 @@ const CurrencyConverter = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <CircularProgress />;
   } else if (dataError) {
     return <div>An error has occured</div>;
   }
 
   return (
     <Container>
-      <Typography variant="body1" align="center" gutterBottom>
+      <IntroText variant="body1" align="center">
         Please first select a source and target currency and then you get converting. You can also convert in either
         direction too!
-      </Typography>
+      </IntroText>
       <form autoComplete="off">
         <Row>
           <Col>
@@ -131,12 +132,15 @@ const CurrencyConverter = () => {
           </Col>
         </Row>
       </form>
+      {sourceCurrency && targetCurrency && (
+        <CurrencyRatesGraph baseCurrency={sourceCurrency} targetCurrency={targetCurrency} />
+      )}
     </Container>
   );
 };
 
 const Container = styled.div`
-  width: 50%;
+  max-width: 460px;
   margin: 0 auto;
   margin-top: 24px;
 `;
@@ -159,6 +163,12 @@ const Col = styled.div`
 
 const AlignedTextField = styled(TextField)`
   min-height: 70px;
+`;
+
+const IntroText = styled(Typography)`
+  && {
+    margin-bottom: 32px;
+  }
 `;
 
 export default CurrencyConverter;
