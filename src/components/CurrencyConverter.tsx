@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Typography, InputLabel, Select, MenuItem, TextField, CircularProgress } from '@material-ui/core';
+import { Typography, InputLabel, Select, MenuItem, TextField, CircularProgress, FormControl } from '@material-ui/core';
 import { useState } from 'react';
 import useLatestExchangeRatesForCurrency from 'src/hooks/useLatestExchangeRatesForCurrency';
 import validations from 'src/utils/validation';
@@ -82,6 +82,8 @@ const CurrencyConverter = () => {
     return <div>An error has occured</div>;
   }
 
+  console.log({ targetCurrency });
+
   return (
     <Container>
       <IntroText variant="body1" align="center">
@@ -91,16 +93,18 @@ const CurrencyConverter = () => {
       <form autoComplete="off">
         <Row>
           <Col>
-            <InputLabel shrink id="source-currency-label">
-              From
-            </InputLabel>
-            <Select labelId="source-currency-label" value={sourceCurrency} onChange={handleSourceCurrencyChange}>
-              {alphabeticallyOrderedCurr.map((curr, i) => (
-                <MenuItem key={`source-choice-${curr}-${i}`} value={curr}>
-                  {curr}
-                </MenuItem>
-              ))}
-            </Select>
+            <FormControl>
+              <InputLabel shrink id="source-currency-label">
+                From
+              </InputLabel>
+              <Select labelId="source-currency-label" value={sourceCurrency} onChange={handleSourceCurrencyChange}>
+                {alphabeticallyOrderedCurr.map((curr, i) => (
+                  <MenuItem key={`source-choice-${curr}-${i}`} value={curr}>
+                    {curr}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
             <AlignedTextField
               value={convertedValues?.source}
@@ -112,16 +116,26 @@ const CurrencyConverter = () => {
             />
           </Col>
           <Col>
-            <InputLabel shrink id="target-currency-label">
-              To
-            </InputLabel>
-            <Select labelId="target-currency-label" value={targetCurrency} onChange={handleTargetCurrencyChange}>
-              {alphabeticallyOrderedCurr.map((curr, i) => (
-                <MenuItem key={`target-choice-${curr}-${i}`} value={curr}>
-                  {curr}
+            <FormControl>
+              <InputLabel shrink id="target-currency-label">
+                To
+              </InputLabel>
+              <Select
+                labelId="target-currency-label"
+                value={targetCurrency}
+                onChange={handleTargetCurrencyChange}
+                displayEmpty
+              >
+                <MenuItem value="" disabled>
+                  <em>Select a currency</em>
                 </MenuItem>
-              ))}
-            </Select>
+                {alphabeticallyOrderedCurr.map((curr, i) => (
+                  <MenuItem key={`target-choice-${curr}-${i}`} value={curr}>
+                    {curr}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
             <AlignedTextField
               value={convertedValues?.target}
