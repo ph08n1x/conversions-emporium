@@ -4,6 +4,7 @@ import { useState } from 'react';
 import useLatestExchangeRatesForCurrency from 'src/hooks/useLatestExchangeRatesForCurrency';
 import validations from 'src/utils/validation';
 import CurrencyRatesGraph from './CurrencyRatesGraph';
+import alphabeticallyOrderArray from 'src/utils/alpheticallyOrderArray';
 
 interface ConvertedValues {
   source?: string | number;
@@ -27,6 +28,7 @@ const CurrencyConverter = () => {
   const { data, isLoading, error: dataError } = useLatestExchangeRatesForCurrency(sourceCurrency);
 
   const currencies = [sourceCurrency, ...Object.keys(data?.rates ?? [])];
+  const alphabeticallyOrderedCurr = alphabeticallyOrderArray(currencies);
 
   const handleSourceCurrencyChange = (e: ChangeEvent) => {
     setSourceCurrency(e.target.value as string);
@@ -93,7 +95,7 @@ const CurrencyConverter = () => {
               From
             </InputLabel>
             <Select labelId="source-currency-label" value={sourceCurrency} onChange={handleSourceCurrencyChange}>
-              {currencies.map((curr, i) => (
+              {alphabeticallyOrderedCurr.map((curr, i) => (
                 <MenuItem key={`source-choice-${curr}-${i}`} value={curr}>
                   {curr}
                 </MenuItem>
@@ -114,7 +116,7 @@ const CurrencyConverter = () => {
               To
             </InputLabel>
             <Select labelId="target-currency-label" value={targetCurrency} onChange={handleTargetCurrencyChange}>
-              {currencies.map((curr, i) => (
+              {alphabeticallyOrderedCurr.map((curr, i) => (
                 <MenuItem key={`target-choice-${curr}-${i}`} value={curr}>
                   {curr}
                 </MenuItem>
