@@ -17,10 +17,12 @@ interface FormErrors {
 type ChangeEvent = React.ChangeEvent<{ name?: string; value: unknown }>;
 
 const CurrencyConverter = () => {
+  // Setup states
   const [sourceCurrency, setSourceCurrency] = useState<string>('EUR');
   const [targetCurrency, setTargetCurrency] = useState<string>('');
   const [convertedValues, setConvertedValues] = useState<ConvertedValues>({ source: '', target: '' });
   const [formErrors, setFormErrors] = useState<FormErrors>();
+  // Setup initial currency versions for default EUR
   const { data, isLoading, error: dataError } = useLatestExchangeRatesForCurrency(sourceCurrency);
 
   const currencies = [sourceCurrency, ...Object.keys(data?.rates ?? [])];
@@ -62,6 +64,7 @@ const CurrencyConverter = () => {
     });
   };
 
+  // Checks if field has a valid number entered
   const validateNumberField = (aValue: string, fieldName: 'source' | 'target') => {
     if (!aValue.match(validations.number.pattern.value)) {
       setFormErrors({ ...formErrors, [fieldName]: validations.number.pattern.message });
@@ -79,7 +82,8 @@ const CurrencyConverter = () => {
   return (
     <Container>
       <Typography variant="body1" align="center" gutterBottom>
-        Please first select a source and target currency and then you get converting!
+        Please first select a source and target currency and then you get converting. You can also convert in either
+        direction too!
       </Typography>
       <form autoComplete="off">
         <Row>

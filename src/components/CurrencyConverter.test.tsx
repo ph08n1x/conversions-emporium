@@ -14,7 +14,7 @@ const dataValues = {
 
 beforeEach(() => {
   jest.spyOn(hooks, 'default').mockImplementation((currency?: string) => ({
-    data: { ...dataValues, base: currency },
+    data: { ...dataValues, base: currency ?? 'EUR' },
     isLoading: false,
     isError: false,
     error: undefined,
@@ -32,13 +32,17 @@ afterEach(() => {
   cleanup();
 });
 
+const selectTargetCurrency = () => {
+  const [, targetSelect] = screen.getAllByRole('button');
+  // Select target currency
+  fireEvent.mouseDown(targetSelect);
+  const listbox = within(screen.getByRole('listbox'));
+  fireEvent.click(listbox.getByText(/gbp/i));
+};
+
 describe('CurrencyConverter component conversions', () => {
   beforeEach(() => {
-    const [, targetSelect] = screen.getAllByRole('button');
-    // Select target currency
-    fireEvent.mouseDown(targetSelect);
-    const listbox = within(screen.getByRole('listbox'));
-    fireEvent.click(listbox.getByText(/gbp/i));
+    selectTargetCurrency();
   });
 
   test('should convert base currency to target currency', () => {
@@ -64,7 +68,11 @@ describe('CurrencyConverter component conversions', () => {
   });
 });
 
-test('CurrencyConverter component inputs disabled until currency selection', () => {
-  const [sourceValueInput] = screen.getAllByRole('textbox');
+test('CurrencyConverter component should disable text inputs until currency selection', () => {
+  const [sourceValueInput, targetValueInput] = screen.getAllByRole('textbox');
   expect(sourceValueInput).toBeDisabled();
+  expect(targetValueInput).toBeDisabled();
+  selectTargetCurrency();
+  expect(sourceValueInput).not.toBeDisabled();
+  expect(targetValueInput).not.toBeDisabled();
 });

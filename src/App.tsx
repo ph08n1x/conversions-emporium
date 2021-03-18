@@ -4,6 +4,7 @@ import type {} from 'styled-components/cssprop';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { Typography, Container } from '@material-ui/core';
+import styled from 'styled-components';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,14 +21,18 @@ const queryClient = new QueryClient({
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <Container maxWidth="md">
+    <MainContainer maxWidth="md">
       <Typography variant="h4" component="h1" align="center">
         Gerald&apos;s Wonder Emporium of Conversions
       </Typography>
       <CurrencyConverter />
-    </Container>
+    </MainContainer>
     <ReactQueryDevtools initialIsOpen={false} />
   </QueryClientProvider>
 );
+
+const MainContainer = styled(Container)`
+  margin-top: 24px;
+`;
 
 export default App;
