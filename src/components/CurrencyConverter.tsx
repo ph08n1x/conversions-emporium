@@ -82,8 +82,6 @@ const CurrencyConverter = () => {
     return <div>An error has occured</div>;
   }
 
-  console.log({ targetCurrency });
-
   return (
     <Container>
       <IntroText variant="body1" align="center">
