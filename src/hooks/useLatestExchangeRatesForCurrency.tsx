@@ -8,7 +8,7 @@ const latestExchangeRatesQueryKey = (currency?: string) => ['latestExchange', cu
 
 const useLatestExchangeRatesForCurrency = (currency?: string) => {
   const { data, isLoading, isError, error } = useQuery<CurrencyRates>(latestExchangeRatesQueryKey(currency), () =>
-    getLatestExchangeRates(),
+    getLatestExchangeRates(currency),
   );
 
   return { data, isLoading, isError, error };
